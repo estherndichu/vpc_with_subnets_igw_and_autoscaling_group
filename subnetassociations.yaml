@@ -1,0 +1,65 @@
+Parameters:
+  myVPC:
+    Description: Select VPC
+    Type: AWS::EC2::VPC::Id
+    Default: "<Your VPC ID>"
+  igw:
+    Description: Select internet gateway
+    Type: String
+    Default: "Your default Internet Gateway"
+
+Resources:
+  PublicSubnet1:
+    Type: AWS::EC2::Subnet
+    Properties:
+      AvailabilityZone: 'us-west-2a'
+      MapPublicIpOnLaunch: true
+      VpcId: !Ref myVPC
+      CidrBlock: 10.0.1.0/24
+      Tags:
+        - Key: Name
+          Value: PublicSubnet1
+
+  PublicSubnet2:
+    Type: AWS::EC2::Subnet
+    Properties:
+      AvailabilityZone: 'us-west-2b'
+      MapPublicIpOnLaunch: true
+      VpcId: !Ref myVPC
+      CidrBlock: 10.0.2.0/24
+      Tags:
+        - Key: Name
+          Value: PublicSubnet2
+
+  PublicRouteTable:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId: !Ref myVPC
+      Tags:
+        - Key: Name
+          Value: PublicRouteTable
+  PublicRoute:
+    Type: AWS::EC2::Route
+    Properties:
+      RouteTableId: !Ref PublicRouteTable
+      DestinationCidrBlock: 0.0.0.0/0
+      GatewayId: !Ref igw
+  PublicSubnetRouteTableAssociation1:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref PublicSubnet1
+      RouteTableId: !Ref PublicRouteTable
+  PublicSubnetRouteTableAssociation2:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref PublicSubnet2
+      RouteTableId: !Ref PublicRouteTable
+
+Outputs:
+  outputPublicSubnet1:
+    Description: A reference to the created PublicSubnet
+    Value: !Ref PublicSubnet1
+
+  outputPublicSubnet2:
+    Description: A reference to the created PrivateSubnet
+    Value: !Ref PublicSubnet2

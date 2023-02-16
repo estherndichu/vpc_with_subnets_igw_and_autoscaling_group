@@ -1,27 +1,92 @@
-LogicalID:
-  Type: AWS::ElasticLoadBalancingV2::TargetGroup
-  Properties:
-    HealthCheckEnabled: false
-    HealthCheckIntervalSeconds: Number
-    HealthCheckPath: "String"
-    HealthCheckPort: "String"
-    HealthCheckProtocol: "String"
-    HealthCheckTimeoutSeconds: Number
-    HealthyThresholdCount: Number
-    IpAddressType: "String"
-    Matcher:
-      GrpcCode: "String"
-      HttpCode: "String"
-    Name: "String"
-    Port: Number
-    Protocol: "String"
-    ProtocolVersion: "String"
-    Tags:
-      Tags
-    TargetGroupAttributes:
-      TargetGroupAttributes
-    TargetType: "String"
-    Targets:
-      Targets
-    UnhealthyThresholdCount: Number
-    VpcId: "String"
+Parameters:
+  myVPC:
+    Description: Select One VPC available in your existing account
+    Type: AWS::EC2::VPC::Id
+    Default: "<Your VPC ID>"
+  PublicSubnets:
+    Type: CommaDelimitedList
+    Description: The list of SubnetIds in your Virtual Private Cloud (VPC)
+    Default: <subnet1 id>, <subnet2 id>
+  KeyName:
+    Description: "To connect to EC2 instances via SSH"
+    Type: AWS::EC2::KeyPair::KeyName
+    Default: "<Your KeyPair Name>"
+Resources: 
+  ELBTargetGroup:
+   Type: 'AWS::ElasticLoadBalancingV2::TargetGroup'
+   Properties:
+     HealthCheckIntervalSeconds: 6
+     HealthCheckTimeoutSeconds: 5
+     HealthyThresholdCount: 2
+     Port: 80
+     Protocol: HTTP
+     UnhealthyThresholdCount: 2
+     VpcId: !Ref myVPC
+     TargetType: instance
+  ELBSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupName: "ELBTraffic"
+      GroupDescription: "Enable HTTP access and SSH on the inbound port for ELB"
+      VpcId: !Ref myVPC
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: 443
+          ToPort: 443
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          CidrIp: 0.0.0.0/0
+      Tags:
+        - Key: Name
+          Value: ELBSecurityGroup
+  ElasticLoadBalancer:
+    Type: 'AWS::ElasticLoadBalancingV2::LoadBalancer'
+    Properties:
+      Subnets: !Ref PublicSubnets
+      SecurityGroups: 
+        - !Ref ELBSecurityGroup
+  ElbListener:
+   Type: 'AWS::ElasticLoadBalancingV2::Listener'
+   Properties:
+     DefaultActions:
+       - Type: forward
+         TargetGroupArn: !Ref ELBTargetGroup
+     LoadBalancerArn: !Ref ElasticLoadBalancer
+     Port: '80'
+     Protocol: HTTP
+  AsgConfig:
+    Type: AWS::AutoScaling::LaunchConfiguration
+    Properties:
+      InstanceType: t2.micro
+      SecurityGroups:
+      - !Ref ELBSecurityGroup
+      ImageId: "ami-06e85d4c3149db26a"
+      UserData:
+        Fn::Base64: 
+          !Sub |
+            #!/bin/bash
+            yum update -y
+            yum install httpd -y
+            systemctl start httpd
+            systemctl enable httpd
+  AsgGroup:
+    Type: AWS::AutoScaling::AutoScalingGroup
+    DependsOn:
+      - ELBTargetGroup
+      - ElasticLoadBalancer
+    Properties:
+      VPCZoneIdentifier: !Ref PublicSubnets
+      LaunchConfigurationName: !Ref AsgConfig
+      MinSize: '2'
+      MaxSize: '10'
+      DesiredCapacity: '3'
+      HealthCheckGracePeriod: 300
+      MaxInstanceLifetime: 2592000
+      TargetGroupARNs:
+        - !Ref ELBTargetGroup
