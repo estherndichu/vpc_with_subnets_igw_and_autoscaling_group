@@ -1,0 +1,27 @@
+LogicalID:
+  Type: AWS::ElasticLoadBalancingV2::TargetGroup
+  Properties:
+    HealthCheckEnabled: false
+    HealthCheckIntervalSeconds: Number
+    HealthCheckPath: "String"
+    HealthCheckPort: "String"
+    HealthCheckProtocol: "String"
+    HealthCheckTimeoutSeconds: Number
+    HealthyThresholdCount: Number
+    IpAddressType: "String"
+    Matcher:
+      GrpcCode: "String"
+      HttpCode: "String"
+    Name: "String"
+    Port: Number
+    Protocol: "String"
+    ProtocolVersion: "String"
+    Tags:
+      Tags
+    TargetGroupAttributes:
+      TargetGroupAttributes
+    TargetType: "String"
+    Targets:
+      Targets
+    UnhealthyThresholdCount: Number
+    VpcId: "String"

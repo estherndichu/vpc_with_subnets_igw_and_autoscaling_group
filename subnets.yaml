@@ -1,0 +1,39 @@
+LogicalID:
+  Type: AWS::EC2::Subnet
+  Properties:
+    AssignIpv6AddressOnCreation: false
+    AvailabilityZone: "String"
+    AvailabilityZoneId: "String"
+    CidrBlock: "String"
+    EnableDns64: false
+    Ipv6CidrBlock: "String"
+    Ipv6Native: false
+    MapPublicIpOnLaunch: false
+    OutpostArn: "String"
+    PrivateDnsNameOptionsOnLaunch:
+      EnableResourceNameDnsAAAARecord: false
+      EnableResourceNameDnsARecord: false
+      HostnameType: "String"
+    Tags:
+      Tags
+    VpcId: "String" # Required
+
+LogicalID:
+  Type: AWS::EC2::Subnet
+  Properties:
+    AssignIpv6AddressOnCreation: false
+    AvailabilityZone: "String"
+    AvailabilityZoneId: "String"
+    CidrBlock: "String"
+    EnableDns64: false
+    Ipv6CidrBlock: "String"
+    Ipv6Native: false
+    MapPublicIpOnLaunch: false
+    OutpostArn: "String"
+    PrivateDnsNameOptionsOnLaunch:
+      EnableResourceNameDnsAAAARecord: false
+      EnableResourceNameDnsARecord: false
+      HostnameType: "String"
+    Tags:
+      Tags
+    VpcId: "String" # Required
