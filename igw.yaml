@@ -1,11 +1,24 @@
-igwName:
-  Type: AWS::EC2::InternetGateway
-  Properties:
-    Tags:
-      - Key: keyname
-        Value: value
-AttachGateway:
-  Type: AWS::EC2::VPCGatewayAttachment
-  Properties:
-    VpcId: vpc-id
-    InternetGatewayId: ! Ref igwName
+# Create Internet Gateway and attach to VPC
+Parameters:
+  myVPC:
+    Description: Get VPC
+    Type: AWS::EC2::VPC::Id
+    Default: "<Select VPC>"
+
+Resources:
+  igw:
+    Type: AWS::EC2::InternetGateway
+    Properties:
+      Tags:
+        - Key: Name
+          Value: Internet Gateway
+  AttachGateway:
+    Type: AWS::EC2::VPCGatewayAttachment
+    Properties:
+      VpcId: !Ref myVPC
+      InternetGatewayId: !Ref igw
+
+Outputs:
+  outputigw:
+    Description: A reference to the created Internet Gatway
+    Value: !Ref igw
