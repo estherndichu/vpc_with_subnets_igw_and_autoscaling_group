@@ -11,6 +11,8 @@ Resources:
           Value: test
 
 Outputs:
-  outputVPC:
+  myVPC:
     Description: A reference to the created VPC
     Value: !Ref myVPC
+    Export:
+      Name: myVPC

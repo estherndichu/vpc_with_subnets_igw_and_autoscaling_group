@@ -1,5 +1,11 @@
-LogicalID:
+igwName:
   Type: AWS::EC2::InternetGateway
   Properties:
     Tags:
-      Tags
+      - Key: keyname
+        Value: value
+AttachGateway:
+  Type: AWS::EC2::VPCGatewayAttachment
+  Properties:
+    VpcId: vpc-id
+    InternetGatewayId: ! Ref igwName
