@@ -1,11 +1,16 @@
 # VPC with cidrBlock of 10.0.0.0/16
+Resources:
+  myVPC:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: 10.0.0.0/16
+      EnableDnsSupport: true
+      InstanceTenancy: default
+      Tags:
+        - Key: stack
+          Value: test
 
-myVPC:
-  Type: AWS::EC2::VPC
-  Properties:
-    CidrBlock: 10.0.0.0/16
-    EnableDnsSupport: true
-    Tags:
-      - Key: vpc
-        Value: myVPC
-
+Outputs:
+  outputVPC:
+    Description: A reference to the created VPC
+    Value: !Ref myVPC
