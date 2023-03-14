@@ -1,5 +1,5 @@
 ## PREREQUISITES
-* KeyPair
+* KeyPair for SSH access
 #### [Follow these instructions to create a key pair](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/create-key-pairs.html)
 ## How to run the template
 
@@ -27,4 +27,4 @@ Navigate to VPC Subnets and note down in a text editor the values for the two su
 #### Step 4: Create Target Group, Security Group, Load Balancer and AutoScaling Group.
 * 1. Repeat Instructions 1 & 2 in Step 2 above. Choose targetGroup.yaml file. Under parameters choose your KeyPair, Enter the values for the subnets noted above then choose myVPC.
 * 2. Leave everything else as default and click Submit
-When the stack creation is complete, navigate to EC2 - instances. Wait for the message '2/2 checks passed' to display under Status Check. Select one of the instances and click on 'Public IPv4 address' on the Details Tab that appears at the bottom. Apache Homepage displays in a new tab.
+When the stack creation is complete, navigate to EC2 - instances. Wait for the message '2/2 checks passed' to display under Status Check. Select one of the instances and click on 'Public IPv4 address' on the Details Tab that appears at the bottom. Apache TestPage displays in a new tab.
