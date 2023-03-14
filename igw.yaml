@@ -1,4 +1,4 @@
-# Create Internet Gateway and attach to VPC
+# Create Internet Gateway and attach to myVPC
 Parameters:
   myVPC:
     Description: Get VPC

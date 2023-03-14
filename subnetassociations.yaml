@@ -1,3 +1,4 @@
+# Create Subnets, Route Tables and associate them to myVPC
 Parameters:
   myVPC:
     Description: Select VPC
